@@ -1,4 +1,3 @@
-import axios from "axios";
 import AxiosService from "./AxiosService";
 
 const api = AxiosService.getAxiosInstance();
@@ -27,7 +26,7 @@ export async function getProfileInfo(token: string) {
 }
 
 export async function updateProfile(token: string, firstName: string, lastName: string, contactNumber: string) {
-    return axios.post(
+    return api.post(
         `${process.env.EXPO_PUBLIC_API_URL}farmer/update-info`,
         {
             firstName,

@@ -23,7 +23,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     const contactNumber = profile?.contactNumber || '';
     return (
         <SafeAreaView style={styles.container}>
-            <Header title="Profile" />
+            <Header title="Profile" rightIcon='create-outline'/>
             <ScrollView contentContainerStyle={styles.detailsContainer}>
                 <View style={styles.inputContainer}>
                     <CustomTextBoxWithTitle title='First Name' editable={false} value={firstName} />

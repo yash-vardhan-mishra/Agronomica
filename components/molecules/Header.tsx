@@ -7,25 +7,40 @@ interface HeaderProps {
     title: string;
     onBackPress?: () => void;
     isBackButtonVisible?: boolean;
+    rightIcon?: keyof typeof Ionicons.glyphMap;
+    onRightIconPress?: () => void; 
 }
 
-const Header: React.FC<HeaderProps> = ({ title, onBackPress, isBackButtonVisible = false }) => {
-
-    const titleStyles = (isBackButtonVisible: boolean): TextStyle => {
+const Header: React.FC<HeaderProps> = ({ title, onBackPress, isBackButtonVisible = false, rightIcon, onRightIconPress }) => {
+    
+    const titleStyles = (): TextStyle => {
         return {
-            textAlign: isBackButtonVisible ? 'left' : 'center',
-            flex: isBackButtonVisible ? 0 : 1
+            textAlign: 'center',
+            flex: 1
         };
     };
 
     return (
         <View style={styles.container}>
-            {isBackButtonVisible ? <Pressable style={styles.backButton} onPress={onBackPress}>
-                <Ionicons name="arrow-back" size={24} color="black" />
-            </Pressable> : null}
-            <CustomText style={titleStyles(isBackButtonVisible)} size={18} weight='500'>
+            {isBackButtonVisible && !rightIcon ? (
+                <Pressable style={styles.backButton} onPress={onBackPress}>
+                    <Ionicons name="arrow-back" size={20} color="black" />
+                </Pressable>
+            ) : (
+                <View style={styles.spacer} />
+            )}
+            
+            <CustomText style={titleStyles()} size={18} weight='500'>
                 {title}
             </CustomText>
+            
+            {rightIcon ? (
+                <Pressable style={styles.rightIconButton} onPress={onRightIconPress}>
+                    <Ionicons name={rightIcon} size={24} color="black" />
+                </Pressable>
+            ) : (
+                <View style={styles.spacer} />
+            )}
         </View>
     )
 }
@@ -33,7 +48,19 @@ const Header: React.FC<HeaderProps> = ({ title, onBackPress, isBackButtonVisible
 export default Header
 
 const styles = StyleSheet.create({
-    container: { alignItems: 'center', paddingVertical: 12, width: '100%', flexDirection: 'row' },
-    backButton: { marginRight: 24 },
-    title: { flex: 1 },
+    container: { 
+        alignItems: 'center', 
+        paddingVertical: 12, 
+        width: '100%', 
+        flexDirection: 'row' 
+    },
+    backButton: { 
+        marginRight: 16 
+    },
+    rightIconButton: { 
+        marginLeft: 16 
+    },
+    spacer: { 
+        width: 40 
+    },
 })

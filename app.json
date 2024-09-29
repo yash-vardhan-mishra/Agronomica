@@ -12,10 +12,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "config": {
         "usesNonExemptEncryption": false
-      }
+      },
+      "bundleIdentifier":"com.agronomica.plus"
     },
     "android": {
       "adaptiveIcon": {
