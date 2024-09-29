@@ -18,6 +18,7 @@ import { useLoading } from '../../contexts/LoadingContext';
 import { saveItem } from '../../services/keychain';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 import { RootStackParamList } from '../../navigation';
+import { useAuth } from '../../contexts/AuthContext';
 
 type OtpVerificationRouteProp = RouteProp<UnauthStackParamList, 'OtpVerification'>;
 type OtpVerificationNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -25,20 +26,23 @@ type OtpVerificationNavigationProp = NativeStackNavigationProp<RootStackParamLis
 const OtpVerification = ({ }) => {
     const route = useRoute<OtpVerificationRouteProp>();
     const { setLoading } = useLoading()
+    const { login } = useAuth(); 
     const { email } = route.params;
 
     const navigation = useNavigation<OtpVerificationNavigationProp>()
     const [otp, setOtp] = useState('')
 
-    const submitForm = () => {
+    const submitForm =  () => {
         setLoading(true)
-        verifyOtp(email, otp).then(res => {
-            console.log('res is', res);
-            saveItem('authToken', res.token); 
+        verifyOtp(email, otp).then(async res => {
+            await saveItem('authToken', res.token);
+            login(res.token);  // Trigger login with the new token
+
+            // Navigate based on the response
             if (res.screen === 'profile-creation') {
                 navigation.navigate('AuthStack', { screen: 'ProfileCreation' });
             } else {
-                navigation.navigate('AuthStack', { screen: 'Home' });
+                navigation.navigate('AuthStack', { screen: 'HomeTab' });
             }
         }).catch(err => {
             Alert.alert('Error', err.message || 'Something went wrong')
@@ -70,17 +74,6 @@ const OtpVerification = ({ }) => {
                     </View>
                 </View>
             </CustomKeyboardAvoidingView>
-            <View style={styles.bottomPromptContainer}>
-
-                {/* <CustomText size={14} weight='500'>
-                    {isLogin ? Strings.signUpBottomPrompt : Strings.loginBottomPrompt}
-                </CustomText> */}
-                {/* <Pressable onPress={toggleGui}>
-                    <CustomText size={14} weight='600' color={Colors.amber}>
-                        {' '}{isLogin ? Strings.signUpBottomPromptAction : Strings.loginBottomPromptAction}
-                    </CustomText>
-                </Pressable> */}
-            </View>
         </SafeAreaView>
     )
 }

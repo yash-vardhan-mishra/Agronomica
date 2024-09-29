@@ -5,15 +5,16 @@ import { useFonts } from 'expo-font';
 
 export type fontFamilies = 'Inter-Regular' | 'Inter-Bold' | 'Inter-Italic' | 'Inter-BoldItalic'
 
-interface CustomTextBoxProps {
-    placeholder: string;
+export interface CustomTextBoxProps {
+    placeholder?: string;
     value: string;
-    onChangeText: (text: string) => void;
+    onChangeText?: (text: string) => void;
     fontFamily?: fontFamilies;
     textInputStyles?: TextInputProps;
+    editable?: boolean;
 }
 
-const CustomTextBox: React.FC<CustomTextBoxProps & TextInputProps & PressableProps> = ({ placeholder, value, onChangeText, fontFamily = 'Inter-Regular', textInputStyles, style, ...props }) => {
+const CustomTextBox: React.FC<CustomTextBoxProps & TextInputProps & PressableProps> = ({ placeholder, value, onChangeText, fontFamily = 'Inter-Regular', textInputStyles, style, editable, ...props }) => {
     const textInputRef = useRef<TextInput>(null);
     const [loaded] = useFonts({
         'Inter-Regular': require('../../../assets/fonts/Inter-Regular.otf'),
@@ -47,6 +48,7 @@ const CustomTextBox: React.FC<CustomTextBoxProps & TextInputProps & PressablePro
                 placeholder={placeholder}
                 value={value}
                 onChangeText={onChangeText}
+                editable={editable}
                 {...props}
             />
         </Pressable>

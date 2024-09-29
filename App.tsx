@@ -4,16 +4,24 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Navigation from './navigation';
 import { LoadingProvider } from './contexts/LoadingContext';
 import LoadingScreen from './containers/LoadingScreen';
+import { AuthProvider } from './contexts/AuthContext';
+import { ProfileProvider } from './contexts/ProfileProvider';
 
-export default function App() {
+const App: React.FC = () => {
   return (
     <LoadingProvider>
-      <SafeAreaProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <Navigation />
-          <LoadingScreen />
-        </GestureHandlerRootView>
-      </SafeAreaProvider>
+      <AuthProvider>
+        <ProfileProvider>
+          <SafeAreaProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <Navigation />
+              <LoadingScreen />
+            </GestureHandlerRootView>
+          </SafeAreaProvider>
+        </ProfileProvider>
+      </AuthProvider>
     </LoadingProvider>
   );
-}
+};
+
+export default App;

@@ -1,8 +1,10 @@
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { navigationRef } from './service';
 import UnauthStack from './UnauthStack';
 import AuthStack from './AuthStack';
+import { useAuth } from '../contexts/AuthContext';
 
 export type RootStackParamList = {
   UnauthStack: undefined;
@@ -11,11 +13,16 @@ export type RootStackParamList = {
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
-const RootStackScreen = () => {
+const RootStackScreen: React.FC = () => {
+  const { isLoggedIn } = useAuth();
+
   return (
     <RootStack.Navigator screenOptions={{ headerShown: false }}>
-      <RootStack.Screen name="UnauthStack" component={UnauthStack} />
-      <RootStack.Screen name="AuthStack" component={AuthStack} />
+      {isLoggedIn ? (
+        <RootStack.Screen name="AuthStack" component={AuthStack} />
+      ) : (
+        <RootStack.Screen name="UnauthStack" component={UnauthStack} />
+      )}
     </RootStack.Navigator>
   );
 };
