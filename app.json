@@ -11,12 +11,17 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "extra": {
+      "eas": {
+        "projectId": "6801c16c-334f-41c4-87a3-8d7377998876"
+      }
+    },
     "ios": {
       "supportsTablet": false,
       "config": {
         "usesNonExemptEncryption": false
       },
-      "bundleIdentifier":"com.agronomica.plus"
+      "bundleIdentifier": "com.agronomica.plus"
     },
     "android": {
       "adaptiveIcon": {
@@ -30,7 +35,13 @@
     "plugins": [
       "expo-font",
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ]
     ]
   }
 }

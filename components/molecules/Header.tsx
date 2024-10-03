@@ -8,11 +8,11 @@ interface HeaderProps {
     onBackPress?: () => void;
     isBackButtonVisible?: boolean;
     rightIcon?: keyof typeof Ionicons.glyphMap;
-    onRightIconPress?: () => void; 
+    onRightIconPress?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ title, onBackPress, isBackButtonVisible = false, rightIcon, onRightIconPress }) => {
-    
+
     const titleStyles = (): TextStyle => {
         return {
             textAlign: 'center',
@@ -29,11 +29,11 @@ const Header: React.FC<HeaderProps> = ({ title, onBackPress, isBackButtonVisible
             ) : (
                 <View style={styles.spacer} />
             )}
-            
+
             <CustomText style={titleStyles()} size={18} weight='500'>
                 {title}
             </CustomText>
-            
+
             {rightIcon ? (
                 <Pressable style={styles.rightIconButton} onPress={onRightIconPress}>
                     <Ionicons name={rightIcon} size={24} color="black" />
@@ -48,19 +48,20 @@ const Header: React.FC<HeaderProps> = ({ title, onBackPress, isBackButtonVisible
 export default Header
 
 const styles = StyleSheet.create({
-    container: { 
-        alignItems: 'center', 
-        paddingVertical: 12, 
-        width: '100%', 
-        flexDirection: 'row' 
+    container: {
+        alignItems: 'center',
+        paddingVertical: 12,
+        width: '100%',
+        flexDirection: 'row',
+        paddingHorizontal: 20
     },
-    backButton: { 
-        marginRight: 16 
+    backButton: {
+        marginRight: 16
     },
-    rightIconButton: { 
-        marginLeft: 16 
+    rightIconButton: {
+        marginLeft: 16
     },
-    spacer: { 
-        width: 40 
+    spacer: {
+        width: 40
     },
 })

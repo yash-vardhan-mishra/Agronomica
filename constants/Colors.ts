@@ -6,6 +6,7 @@ export default {
     amber: "#FFC100",
     white: '#ffffff',
     philippineOrange: '#FF7400',
-    romanSilver2:  '#838BA1',
-    darkGunmetal: '#1E232C'
+    romanSilver2: '#838BA1',
+    darkGunmetal: '#1E232C',
+    black: '#000000'
 }
