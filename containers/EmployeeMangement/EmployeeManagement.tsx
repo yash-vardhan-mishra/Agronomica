@@ -7,7 +7,7 @@ import CustomText from '../../components/atoms/CustomText/CustomText';
 import Colors from '../../constants/Colors';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeTabParamList } from '../../navigation/HomeTab';
-import { getEmployees } from '../../services/employee'; 
+import { getEmployees } from '../../services/employee';
 import { useAuth } from '../../contexts/AuthContext';  // Assuming you have an Auth context for the token
 import { useLoading } from '../../contexts/LoadingContext';  // Loading context to handle the loader
 import { useFocusEffect } from '@react-navigation/native';
@@ -51,11 +51,15 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = ({ navigation }) =
         }
 
         return employees.map((employee, index) => (
-            <View key={index} style={styles.employeeItem}>
+            <Pressable
+                onPress={() =>
+                    navigation.navigate('EmployeeDetails', { employeeId: employee.employeeId })
+                }
+                key={index} style={styles.employeeItem}>
                 <CustomText>{employee.firstName} {employee.lastName}</CustomText>
                 <CustomText>{employee.employeeRole}</CustomText>
                 <CustomText>{employee.contactNumber}</CustomText>
-            </View>
+            </Pressable>
         ));
     };
 

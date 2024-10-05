@@ -45,7 +45,7 @@ const AddField: React.FC<AddFieldProps> = ({ navigation }) => {
             if (Array.isArray(res.fieldTypes) && res.fieldTypes?.length) {
                 const formattedFieldTypes = res.fieldTypes.map((item: any) => ({
                     label: item.fieldType,
-                    value: item.typeId
+                    value: item.fieldType
                 }));
                 setState(val => ({ ...val, fieldTypes: formattedFieldTypes }));
             }
@@ -82,7 +82,7 @@ const AddField: React.FC<AddFieldProps> = ({ navigation }) => {
             fieldName,
             fieldAddress: fieldLocation,
             size: parseFloat(fieldSize),
-            fieldTypeId: selectedFieldType,
+            fieldType: selectedFieldType,
             fieldLat: parseFloat(latitude),
             fieldLong: parseFloat(longitude)
         };
@@ -93,11 +93,7 @@ const AddField: React.FC<AddFieldProps> = ({ navigation }) => {
             Alert.alert('Success', 'Field added successfully!');
             navigation.goBack();  // Navigate back or to a success screen if needed
         } catch (error) {
-            if (error.response && error.response.data && error.response.data.error) {
-                Alert.alert('Error', error.response.data.error);
-            } else {
-                Alert.alert('Error', 'There was an error adding the field. Please try again.');
-            }
+            showError(error)
         } finally {
             setLoading(false); // Hide loading state
         }
@@ -180,7 +176,7 @@ const AddField: React.FC<AddFieldProps> = ({ navigation }) => {
                         <Dropdown
                             containerStyle={{ borderRadius: 8 }}
                             selectedTextStyle={styles.dropdownTextStyle}
-                            itemTextStyle={styles.dropdownTextStyle} 
+                            itemTextStyle={styles.dropdownTextStyle}
                             placeholderStyle={styles.dropdownPlaceholderStyle}
                             style={styles.dropdown}
                             data={fieldTypes}
@@ -194,12 +190,12 @@ const AddField: React.FC<AddFieldProps> = ({ navigation }) => {
                     </View>
 
                     {/* Submit Button */}
-                    <CustomButton label='Submit' onPress={submitForm} />
+                    <CustomButton label='Submit' disabled={!isButtonEnabled} onPress={submitForm} />
                 </View>
             </CustomKeyboardAvoidingView>
             <MapViewComponent ref={mapView} onConfirm={setLocation} />
         </SafeAreaView>
     );
-}; 
+};
 
 export default AddField;

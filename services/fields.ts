@@ -49,6 +49,8 @@ export async function getFields(token: string) {
 }
 
 export async function addField(token: string, requestBody: any) {
+    console.log('requestBody is',requestBody);
+    
     return api.post(
         `${process.env.EXPO_PUBLIC_API_URL}farmer/add-field`,
         requestBody,

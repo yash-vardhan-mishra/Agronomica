@@ -80,3 +80,26 @@ export async function getEmployees(token: string) {
             throw err;
         });
 }
+
+export async function getEmployeeById(token: string, employeeId: string) {
+    return api.get(
+        `${process.env.EXPO_PUBLIC_API_URL}farmer/get-employee/${employeeId}`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        }
+    )
+    .then(resp => {
+        const responseBody = resp.data;
+        const { success } = responseBody;
+        if (success) {
+            return responseBody;
+        }
+        const err = new Error('Invalid response');
+        throw err;
+    })
+    .catch(err => {
+        throw err;
+    });
+}
