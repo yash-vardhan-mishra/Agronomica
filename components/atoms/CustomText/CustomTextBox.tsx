@@ -49,6 +49,7 @@ const CustomTextBox: React.FC<CustomTextBoxProps & TextInputProps & PressablePro
                 value={value}
                 onChangeText={onChangeText}
                 editable={editable}
+                placeholderTextColor={Colors.silver}
                 {...props}
             />
         </Pressable>

@@ -3,6 +3,7 @@ import { Alert } from 'react-native';
 import { getProfileInfo } from '../services/profile';
 import { useAuth } from './AuthContext';
 import { navigate } from '../navigation/service';
+import { showError } from '../components/molecules/OtpTextInput/utils';
 
 interface Profile {
     firstName: string;
@@ -24,7 +25,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     const fetchProfileData = async () => {
         if (!authToken) return null;
         getProfileInfo(authToken).then((res) => {
-            const { firstName, lastName, contactNumber } = res;                        
+            const { firstName, lastName, contactNumber } = res;
             // Redirect to ProfileCreation if any profile field is missing
             if (!firstName || !lastName || !contactNumber) {
                 navigate('ProfileCreation');
@@ -32,7 +33,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
             }
             setProfile(res);
         }).catch((err) => {
-            Alert.alert('Error', err?.message || 'Something went wrong');
+            showError(err)
         });
     };
 

@@ -8,5 +8,6 @@ export default {
     philippineOrange: '#FF7400',
     romanSilver2: '#838BA1',
     darkGunmetal: '#1E232C',
-    black: '#000000'
+    black: '#000000',
+    silver: "#C7C7CD"
 }

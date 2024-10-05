@@ -13,6 +13,7 @@ import Strings from '../../constants/Strings'
 import { login } from '../../services/auth'
 import { AuthScreenNavigationProp } from '../../navigation/UnauthStack';
 import { useLoading } from '../../contexts/LoadingContext';
+import { showError } from '../../components/molecules/OtpTextInput/utils';
 
 const Auth = () => {
     const initialState = {
@@ -34,7 +35,7 @@ const Auth = () => {
         login(email, password).then(res => {
             navigation.navigate('OtpVerification', { email });
         }).catch(err => {
-            Alert.alert('Error', err.message || 'Something went wrong')
+            showError(err)
         }).finally(() => {
             setLoading(false)
         });

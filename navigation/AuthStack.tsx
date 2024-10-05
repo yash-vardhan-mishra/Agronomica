@@ -2,15 +2,24 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ProfileCreation from '../containers/ProfileCreation/ProfileCreation';
 import HomeTab from './HomeTab';
-import AddFarm from '../containers/FarmsManagement/AddFarm';
-
+import AddField from '../containers/FarmsManagement/AddField';
+import OnboardEmployee from '../containers/EmployeeMangement/OnboardEmployee';
+import OnboardEmployeeOtpVerification from '../containers/EmployeeMangement/OnboardEmployeeOtpVerification'; // Import the new screen
 
 const AuthStack = createNativeStackNavigator();
 
 export type AuthStackParamList = {
   HomeTab: undefined;
   ProfileCreation: undefined;
-  AddFarm: undefined;
+  AddField: undefined;
+  OnboardEmployee: undefined;
+  OnboardEmployeeOtpVerification: {
+    employeeEmail: string; 
+    employeeRole: string;
+    firstName: string,
+    lastName: string;
+    contactNumber: string
+  };
 };
 
 export default function AuthStackScreen() {
@@ -18,7 +27,12 @@ export default function AuthStackScreen() {
     <AuthStack.Navigator screenOptions={{ headerShown: false }}>
       <AuthStack.Screen name="HomeTab" component={HomeTab} />
       <AuthStack.Screen name="ProfileCreation" component={ProfileCreation} />
-      <AuthStack.Screen name="AddFarm" component={AddFarm} />
+      <AuthStack.Screen name="AddField" component={AddField} />
+      <AuthStack.Screen name="OnboardEmployee" component={OnboardEmployee} />
+      <AuthStack.Screen
+        name="OnboardEmployeeOtpVerification"
+        component={OnboardEmployeeOtpVerification}
+      />
     </AuthStack.Navigator>
   );
 }

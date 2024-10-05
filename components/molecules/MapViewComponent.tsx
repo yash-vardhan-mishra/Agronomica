@@ -11,6 +11,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../../constants/Colors';
 import CustomText from '../atoms/CustomText/CustomText';
 import { debounce } from './OtpTextInput/utils';
+import constants from '../../constants';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const shimmerColor = ['#f7f7f7', '#f0f0f0', '#f7f7f7'];
@@ -20,15 +21,27 @@ export interface FullScreenModalRef {
   close: () => void;
 }
 
-const latitudeDelta = 0.0922
-const longitudeDelta = 0.0421
-// uni waikato coordinates
-const initialCoordinates = {
-  latitude: -37.788289,
-  longitude: 175.312474,
+export interface MapViewData {
+  latitude: number;
+  longitude: number;
+  selectedLocation: string;
+  selectedCity: string;
+  selectedPostalCode: string;
 }
 
-const MapViewComponent = forwardRef<FullScreenModalRef, {}>((props, ref) => {
+interface Props {
+  onConfirm: (data: MapViewData) => void;
+}
+
+const latitudeDelta = 0.0922
+const longitudeDelta = 0.0421
+
+const initialCoordinates = {
+  latitude: constants.Strings.waikatoLat,
+  longitude: constants.Strings.waikatoLong
+}
+
+const MapViewComponent = forwardRef<FullScreenModalRef, Props>((props, ref) => {
   const mapViewRef = useRef<MapView>(null);
   const { top } = useSafeAreaInsets();
   const [visible, setVisible] = useState(false);
@@ -61,10 +74,10 @@ const MapViewComponent = forwardRef<FullScreenModalRef, {}>((props, ref) => {
         longitude: long,
       });
       console.log('locationDetails are,', { locationDetails, lat, long });
-
+      // checking if the name contains at least one alphabet as lib sometimes only postalcode in the name
       if (locationDetails.length > 0) {
         setGeolocation({
-          selectedLocation: locationDetails[0].name && isNaN(parseFloat(locationDetails[0].name)) ? locationDetails[0].name : locationDetails[0].street || locationDetails[0].district || locationDetails[0].city || '',
+          selectedLocation: locationDetails[0].name && /[a-zA-Z]/.test(locationDetails[0].name) ? locationDetails[0].name : locationDetails[0].street || locationDetails[0].district || locationDetails[0].city || '',
           selectedCity: locationDetails[0].city || '',
           selectedPostalCode: locationDetails[0].postalCode || '',
         });
@@ -95,8 +108,8 @@ const MapViewComponent = forwardRef<FullScreenModalRef, {}>((props, ref) => {
     try {
       const res = await Location.getCurrentPositionAsync({});
       setCoordinates({
-        latitude: res.coords.latitude,
-        longitude: res.coords.longitude,
+        latitude: `${res.coords.latitude}`,
+        longitude: `${res.coords.longitude}`,
       });
       debounceReverseGeocode(res.coords.latitude, res.coords.longitude);
     } catch (error) {
@@ -108,7 +121,7 @@ const MapViewComponent = forwardRef<FullScreenModalRef, {}>((props, ref) => {
   const onRegionChangeComplete = (region: Region) => {
     const { latitude, longitude } = region;
     setFetchingLocation(true);
-    setCoordinates({ latitude, longitude });
+    setCoordinates({ latitude: `${latitude}`, longitude: `${longitude}` });
     debounceReverseGeocode(latitude, longitude); // Only call after map movement completes
   };
 
@@ -146,7 +159,6 @@ const MapViewComponent = forwardRef<FullScreenModalRef, {}>((props, ref) => {
       animationType="slide"
       transparent={false}
       visible={visible}
-      // onDis
       onRequestClose={() => setVisible(false)}
     >
       <View style={{ paddingTop: top, flex: 1 }}>
@@ -172,8 +184,8 @@ const MapViewComponent = forwardRef<FullScreenModalRef, {}>((props, ref) => {
             onLayout={(e) => setMapHeight(e.nativeEvent.layout.height)}
             style={styles.map}
             initialRegion={{
-              latitude,
-              longitude,
+              latitude: parseFloat(latitude),
+              longitude: parseFloat(longitude),
               latitudeDelta,
               longitudeDelta,
             }}
@@ -212,6 +224,16 @@ const MapViewComponent = forwardRef<FullScreenModalRef, {}>((props, ref) => {
             <Pressable
               disabled={fetchingLocation}
               style={styles.bottomButton}
+              onPress={() => {
+                props.onConfirm({
+                  latitude: parseFloat(latitude),
+                  longitude: parseFloat(longitude),
+                  selectedLocation,
+                  selectedCity,
+                  selectedPostalCode,
+                })
+                setVisible(false)
+              }}
             >
               <CustomText weight="700" color={Colors.white}>
                 Confirm

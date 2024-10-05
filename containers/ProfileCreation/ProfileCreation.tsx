@@ -12,6 +12,7 @@ import { useLoading } from '../../contexts/LoadingContext';
 import { updateProfile } from '../../services/profile';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../../navigation/AuthStack';
+import { showError } from '../../components/molecules/OtpTextInput/utils';
 
 type ProfileCreationNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'ProfileCreation'>; // Define the type for navigation
 
@@ -39,7 +40,7 @@ const ProfileCreation: React.FC<ProfileCreationProps> = ({ navigation }) => {
         updateProfile(authToken, firstName, lastName, contactNumber).then(res => {
             navigation.navigate('HomeTab');
         }).catch(err => {
-            Alert.alert('Error,', err.message || 'Something went wrong')
+            showError(err)
         }).finally(() => {
             setLoading(false);
         });

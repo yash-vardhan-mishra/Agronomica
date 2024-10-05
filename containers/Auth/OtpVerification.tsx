@@ -19,6 +19,7 @@ import { saveItem } from '../../services/keychain';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 import { RootStackParamList } from '../../navigation';
 import { useAuth } from '../../contexts/AuthContext';
+import { showError } from '../../components/molecules/OtpTextInput/utils';
 
 type OtpVerificationRouteProp = RouteProp<UnauthStackParamList, 'OtpVerification'>;
 type OtpVerificationNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -45,7 +46,7 @@ const OtpVerification = ({ }) => {
                 navigation.navigate('AuthStack', { screen: 'HomeTab' });
             }
         }).catch(err => {
-            Alert.alert('Error', err.message || 'Something went wrong')
+            showError(err)
         }).finally(() => {
             setLoading(false)
         })

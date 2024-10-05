@@ -11,7 +11,8 @@ export type HomeTabParamList = {
     Profile: undefined;
     EmployeeManagement: undefined;
     FarmsManagement: undefined;
-    AddFarm: undefined;
+    AddField: undefined;
+    OnboardEmployee: undefined;
 };
 
 export default function HomeTab() {
