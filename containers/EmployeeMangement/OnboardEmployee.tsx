@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView, Alert, View } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../../navigation/AuthStack';
@@ -9,13 +9,14 @@ import CustomButton from '../../components/molecules/CustomButton';
 import { Dropdown } from 'react-native-element-dropdown';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLoading } from '../../contexts/LoadingContext';
-import { onboardEmployee } from '../../services/employee'; // Import getFields API method
+import { onboardEmployee } from '../../services/employee';
 import styles from './OnboardEmployee.styles';
 import { showError } from '../../components/molecules/OtpTextInput/utils';
-import { getFields } from '../../services/fields';
 import CustomText from '../../components/atoms/CustomText/CustomText';
 import { FontAwesome6 } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
+import { useFields } from '../../contexts/FieldsDetailsContext';
+import { useFocusEffect } from '@react-navigation/native';
 
 type AddFieldNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'OnboardEmployee'>;
 
@@ -31,6 +32,7 @@ const employeeTypes = [
 const OnboardEmployee: React.FC<OnboardEmployeeProps> = ({ navigation }) => {
     const { authToken } = useAuth(); // Get the auth token from context
     const { setLoading } = useLoading();
+    const { fields, fetchFieldsData } = useFields(); // Get fields from the Fields context
 
     const [state, setState] = useState({
         firstName: '',
@@ -40,27 +42,22 @@ const OnboardEmployee: React.FC<OnboardEmployeeProps> = ({ navigation }) => {
         employeeRole: '',
     });
 
-    const [fields, setFields] = useState<any[]>([]); // State for the fields
     const [selectedField, setSelectedField] = useState(''); // State for the selected field
 
     const { firstName, lastName, employeeEmail, contactNumber, employeeRole } = state;
 
-    useEffect(() => {
-        // Fetch fields data when the component mounts
-        setLoading(true);
-        getFields(authToken)
-            .then(response => {
-                console.log('getFields res',JSON.stringify(response));
-                
-                setFields(response.data); // Set the fields data
-            })
-            .catch(err => {
-                showError(err);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, [authToken]);
+    useFocusEffect(
+        useCallback(() => {
+            const loadFields = async () => {
+                await fetchFieldsData();
+            };
+
+            if (fields.length === 0) {
+                loadFields();
+            }
+
+        }, [fetchFieldsData])
+    );
 
     const onBackPress = () => {
         navigation.goBack();
@@ -118,7 +115,6 @@ const OnboardEmployee: React.FC<OnboardEmployeeProps> = ({ navigation }) => {
 
     // Custom renderItem with an icon on the right
     const renderDropdownItem = (item: any) => {
-        console.log('renderDropdownItem is', item);
         let iconName = 'wheat-awn'
         switch (item.type) {
             case 'Farm':
@@ -147,14 +143,14 @@ const OnboardEmployee: React.FC<OnboardEmployeeProps> = ({ navigation }) => {
         label: field.fieldName,
         value: field.fieldId,
         type: field.fieldType
-    }));    
+    }));
 
     return (
         <SafeAreaView style={styles.container}>
+            <Header title="Onboard Employee" isBackButtonVisible onBackPress={onBackPress} />
             <CustomKeyboardAvoidingView>
-                <Header title="Onboard Employee" isBackButtonVisible onBackPress={onBackPress} />
                 <View style={styles.inputContainer}>
-                    {/* Dropdown for Field Type */} 
+                    {/* Dropdown for Field Type */}
                     <View style={styles.dropdownContainer}>
                         <Dropdown
                             maxHeight={200}
@@ -227,9 +223,9 @@ const OnboardEmployee: React.FC<OnboardEmployeeProps> = ({ navigation }) => {
                     </View>
 
                     {/* Submit Button */}
-                    <CustomButton label="Submit" disabled={!isButtonEnabled} onPress={submitForm} />
                 </View>
             </CustomKeyboardAvoidingView>
+            <CustomButton style={{ marginHorizontal: 20, marginBottom: 20 }} label="Submit" disabled={!isButtonEnabled} onPress={submitForm} />
         </SafeAreaView>
     );
 };

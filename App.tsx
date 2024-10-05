@@ -6,18 +6,21 @@ import { LoadingProvider } from './contexts/LoadingContext';
 import LoadingScreen from './containers/LoadingScreen';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProfileProvider } from './contexts/ProfileProvider';
+import { FieldsDetailsProvider } from './contexts/FieldsDetailsContext';  // Import FieldsDetailsProvider
 
 const App: React.FC = () => {
   return (
     <LoadingProvider>
       <AuthProvider>
         <ProfileProvider>
-          <SafeAreaProvider>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <Navigation />
-              <LoadingScreen />
-            </GestureHandlerRootView>
-          </SafeAreaProvider>
+          <FieldsDetailsProvider>
+            <SafeAreaProvider>
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <Navigation />
+                <LoadingScreen />
+              </GestureHandlerRootView>
+            </SafeAreaProvider>
+          </FieldsDetailsProvider>
         </ProfileProvider>
       </AuthProvider>
     </LoadingProvider>

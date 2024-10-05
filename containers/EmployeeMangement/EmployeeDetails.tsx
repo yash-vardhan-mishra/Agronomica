@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScrollView, View } from 'react-native';
+import { Alert, ScrollView, View } from 'react-native';
 import Header from '../../components/molecules/Header';
 import styles from './EmployeeDetails.styles';
-import { Dropdown } from 'react-native-element-dropdown'; // Import Dropdown component
-import { getEmployeeById } from '../../services/employee'; // Import the getEmployeeById API
-import { useAuth } from '../../contexts/AuthContext'; // To get the auth token
+import { Dropdown } from 'react-native-element-dropdown';
+import { getEmployeeById, updateEmployee } from '../../services/employee';
+import { useAuth } from '../../contexts/AuthContext';
 import CustomButton from '../../components/molecules/CustomButton';
 import CustomTextBoxWithTitle from '../../components/molecules/CustomTextBoxWithTitle';
-import { useLoading } from '../../contexts/LoadingContext'; // For loading indicator
-import { showError } from '../../components/molecules/OtpTextInput/utils'; // Utility to show errors
+import { useLoading } from '../../contexts/LoadingContext';
+import { showError } from '../../components/molecules/OtpTextInput/utils';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { AuthStackParamList } from '../../navigation/AuthStack';
 import CustomText from '../../components/atoms/CustomText/CustomText';
+import { useFields } from '../../contexts/FieldsDetailsContext';
+import { FontAwesome6 } from '@expo/vector-icons';
+import Colors from '../../constants/Colors';
 
 type EmployeeDetailsRouteProp = RouteProp<AuthStackParamList, 'EmployeeDetails'>;
 
@@ -22,23 +25,27 @@ const employeeRoles = [
 ];
 
 const EmployeeDetails = () => {
-    const { authToken } = useAuth(); // Get the auth token from context
-    const [employee, setEmployee] = useState<any>(null); // State to store employee details
-    const { setLoading } = useLoading(); // For showing loading indicator
+    const { authToken } = useAuth();
+    const [employee, setEmployee] = useState<any>(null);
+    const { setLoading } = useLoading();
     const navigation = useNavigation();
     const route = useRoute<EmployeeDetailsRouteProp>();
-    const { employeeId } = route.params; // Get the employeeId from route params
+    const { employeeId } = route.params;
+    const { fields } = useFields();
 
-    const [selectedRole, setSelectedRole] = useState(''); // State for selected role
-    const [isRoleChanged, setIsRoleChanged] = useState(false); // State to track if role has changed
+    const [selectedRole, setSelectedRole] = useState('');
+    const [selectedField, setSelectedField] = useState('');
+    const [isRoleChanged, setIsRoleChanged] = useState(false);
+    const [isFieldChanged, setIsFieldChanged] = useState(false);
 
     useEffect(() => {
         const fetchEmployeeDetails = async () => {
             setLoading(true);
             try {
-                const response = await getEmployeeById(authToken, employeeId); // Call getEmployeeById API
-                setEmployee(response?.data); // Assuming the response has a 'data' object with employee details
-                setSelectedRole(response?.data?.employeeRole); // Set initial employee role
+                const response = await getEmployeeById(authToken, employeeId);
+                setEmployee(response?.data);
+                setSelectedRole(response?.data?.employeeRole);
+                setSelectedField(response?.data?.fieldId || '');
             } catch (err) {
                 showError(err);
             } finally {
@@ -47,44 +54,107 @@ const EmployeeDetails = () => {
         };
 
         fetchEmployeeDetails();
-    }, [authToken, employeeId]); // Dependency array includes authToken and employeeId
+    }, [authToken, employeeId]);
 
     if (!employee) {
-        return null; // Return null if no employee data is available yet
+        return null;
     }
 
-    // Extract employee details from the employee object
     const { firstName, lastName, contactNumber, email } = employee;
 
     const handleRoleChange = (roleValue: string) => {
         setSelectedRole(roleValue);
-        if (roleValue !== employee.employeeRole) {
-            setIsRoleChanged(true); // Enable button if role is changed
-        } else {
-            setIsRoleChanged(false); // Disable button if role is not changed
+        setIsRoleChanged(roleValue !== employee.employeeRole);
+    };
+
+    const handleFieldChange = (fieldValue: string) => {
+        setSelectedField(fieldValue);
+        setIsFieldChanged(fieldValue !== employee.fieldId);
+    };
+
+    const isButtonEnabled = isRoleChanged || isFieldChanged;
+
+    const renderField = (item: any) => {
+        let iconName = 'wheat-awn';
+        switch (item.type) {
+            case 'Farm':
+                iconName = 'wheat-awn';
+                break;
+            case 'Orchard':
+                iconName = 'apple-whole';
+                break;
+            case 'Pasture':
+                iconName = 'cow';
+                break;
+            default:
+                break;
+        }
+        return (
+            <View style={styles.dropdownItemContainer}>
+                <CustomText color={Colors.romanSilver} weight='500' size={14}>{item.label}</CustomText>
+                <FontAwesome6 color={Colors.romanSilver2} name={iconName} size={18} />
+            </View>
+        );
+    };
+
+    const fieldTypes = fields.map(field => ({
+        label: field.fieldName,
+        value: field.fieldId,
+        type: field.fieldType
+    }));
+
+    const handleUpdateEmployee = async () => {
+        if (isButtonEnabled) {
+            setLoading(true);
+            try {
+                await updateEmployee(authToken, {
+                    employeeId,
+                    employeeRole: selectedRole,
+                    fieldId: selectedField,
+                });
+                Alert.alert('Success', 'Employee updated successfully!');
+                navigation.goBack(); // Navigate back after successful update
+            } catch (err) {
+                showError(err);
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
     return (
         <SafeAreaView style={styles.container}>
             <Header isBackButtonVisible onBackPress={() => navigation.goBack()} title="Employee Details" />
-            <ScrollView contentContainerStyle={styles.detailsContainer}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.detailsContainer}>
                 <View style={styles.inputContainer}>
-                    {/* Display Employee Details */}
+                    <View style={styles.dropdownContainer}>
+                        <CustomText style={{ marginBottom: 8 }} weight='500' size={12}>
+                            Assign a Different Field
+                        </CustomText>
+                        <Dropdown
+                            containerStyle={{ borderRadius: 8 }}
+                            selectedTextStyle={styles.dropdownTextStyle}
+                            itemTextStyle={styles.dropdownTextStyle}
+                            placeholderStyle={styles.dropdownPlaceholderStyle}
+                            style={styles.dropdown}
+                            data={fieldTypes}
+                            labelField="label"
+                            valueField="value"
+                            placeholder="Select Field"
+                            renderItem={renderField}
+                            value={selectedField}
+                            onChange={item => handleFieldChange(item.value)}
+                        />
+                    </View>
                     <CustomTextBoxWithTitle title='First Name' editable={false} value={firstName || ''} />
                     <CustomTextBoxWithTitle title='Last Name' editable={false} value={lastName || ''} />
                     <CustomTextBoxWithTitle title='Contact Number' editable={false} value={contactNumber || ''} />
                     <CustomTextBoxWithTitle title='Email' editable={false} value={email || ''} />
 
-                    {/* Dropdown for Employee Role */}
                     <View style={styles.dropdownContainer}>
-                    <CustomText
-                        style={{ marginBottom: 8 }}
-                        weight='500'
-                        size={12}
-                    >
-                        Employee Role
-                    </CustomText>
+                        <CustomText style={{ marginBottom: 8 }} weight='500' size={12}>
+                            Employee Role
+                        </CustomText>
                         <Dropdown
                             containerStyle={{ borderRadius: 8 }}
                             selectedTextStyle={styles.dropdownTextStyle}
@@ -95,19 +165,18 @@ const EmployeeDetails = () => {
                             labelField="label"
                             valueField="value"
                             placeholder="Select Employee Role"
-                            value={selectedRole} // Current selected role
-                            onChange={item => handleRoleChange(item.value)} // Update selected role
+                            value={selectedRole}
+                            onChange={item => handleRoleChange(item.value)}
                         />
                     </View>
                 </View>
-
-                {/* Submit Button */}
-                <CustomButton
-                    label="Update Role"
-                    onPress={() => console.log('Role updated:', selectedRole)} // Add your role update logic here
-                    disabled={!isRoleChanged} // Disable button unless role changes
-                />
             </ScrollView>
+            <CustomButton
+                style={{ marginHorizontal: 20, marginBottom: 20 }}
+                label="Update"
+                onPress={handleUpdateEmployee}
+                disabled={!isButtonEnabled}
+            />
         </SafeAreaView>
     );
 };

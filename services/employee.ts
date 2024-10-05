@@ -67,18 +67,18 @@ export async function getEmployees(token: string) {
             }
         }
     )
-        .then(resp => {
-            const responseBody = resp.data;
-            const { success } = responseBody;
-            if (success) {
-                return responseBody;
-            }
-            const err = new Error('Invalid response');
-            throw err;
-        })
-        .catch(err => {
-            throw err;
-        });
+    .then(resp => {
+        const responseBody = resp.data;
+        const { success } = responseBody;
+        if (success) {
+            return responseBody;
+        }
+        const err = new Error('Invalid response');
+        throw err;
+    })
+    .catch(err => {
+        throw err;
+    });
 }
 
 export async function getEmployeeById(token: string, employeeId: string) {
@@ -102,4 +102,30 @@ export async function getEmployeeById(token: string, employeeId: string) {
     .catch(err => {
         throw err;
     });
+}
+
+export async function updateEmployee(token: string, requestBody: {
+    employeeId: string,
+    employeeRole: string,
+    fieldId: string,
+}) {
+    return api.post(
+        `${process.env.EXPO_PUBLIC_API_URL}farmer/update-employee`,
+        requestBody,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    )
+        .then(resp => {
+            const responseBody = resp.data;
+            if (responseBody.success) {
+                return responseBody.data;
+            }
+            throw new Error('Invalid OTP');
+        })
+        .catch(err => {
+            throw err;
+        });
 }
