@@ -18,7 +18,8 @@ export type AuthStackParamList = {
     employeeRole: string;
     firstName: string,
     lastName: string;
-    contactNumber: string
+    contactNumber: string;
+    fieldId: string;
   };
 };
 

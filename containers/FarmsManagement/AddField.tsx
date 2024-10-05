@@ -180,7 +180,7 @@ const AddField: React.FC<AddFieldProps> = ({ navigation }) => {
                         <Dropdown
                             containerStyle={{ borderRadius: 8 }}
                             selectedTextStyle={styles.dropdownTextStyle}
-                            itemTextStyle={styles.dropdownTextStyle}
+                            itemTextStyle={styles.dropdownTextStyle} 
                             placeholderStyle={styles.dropdownPlaceholderStyle}
                             style={styles.dropdown}
                             data={fieldTypes}

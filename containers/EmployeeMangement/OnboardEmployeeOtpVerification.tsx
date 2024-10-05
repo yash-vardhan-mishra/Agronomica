@@ -26,7 +26,8 @@ const OnboardEmployeeOtpVerification = () => {
         employeeRole,
         firstName,
         lastName,
-        contactNumber }
+        contactNumber,
+        fieldId }
         = route.params;
     const navigation = useNavigation();
 
@@ -35,9 +36,13 @@ const OnboardEmployeeOtpVerification = () => {
     const submitForm = () => {
         setLoading(true);
         verifyOtpForOnboardedEmployee(authToken, {
-            otp, employeeEmail, employeeRole, firstName,
+            otp,
+            employeeEmail,
+            employeeRole,
+            firstName,
             lastName,
-            contactNumber
+            contactNumber,
+            fieldId
         })
             .then(() => {
                 Alert.alert('Success', 'OTP Verified!');

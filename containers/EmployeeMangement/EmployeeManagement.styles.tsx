@@ -15,7 +15,21 @@ const styles = StyleSheet.create({
         bottom: 20,
         height: 52,
         width: 52
-    }
+    },
+    employeeItem: {
+        backgroundColor: Colors.antiFlashWhite,
+        padding: 16,
+        borderRadius: 10,
+        marginBottom: 16,
+        shadowColor: Colors.black,
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 3,
+    },
 })
 
 export default styles

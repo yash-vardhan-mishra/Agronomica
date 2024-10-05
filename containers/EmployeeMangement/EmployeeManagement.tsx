@@ -1,30 +1,73 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView, View, Pressable, ActivityIndicator } from 'react-native';
 import styles from './EmployeeManagement.styles';
 import Header from '../../components/molecules/Header';
-import { Pressable, ScrollView, View } from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { HomeTabParamList } from '../../navigation/HomeTab';
 import CustomText from '../../components/atoms/CustomText/CustomText';
 import Colors from '../../constants/Colors';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { HomeTabParamList } from '../../navigation/HomeTab';
+import { getEmployees } from '../../services/employee'; 
+import { useAuth } from '../../contexts/AuthContext';  // Assuming you have an Auth context for the token
+import { useLoading } from '../../contexts/LoadingContext';  // Loading context to handle the loader
+import { useFocusEffect } from '@react-navigation/native';
+import { showError } from '../../components/molecules/OtpTextInput/utils'; // Utility to handle errors
 
-type ProfileNavigationProp = NativeStackNavigationProp<HomeTabParamList, 'EmployeeManagement'>; // Define the type for navigation
+type EmployeeManagementNavigationProp = NativeStackNavigationProp<HomeTabParamList, 'EmployeeManagement'>;
 
-interface ProfileProps {
-    navigation: ProfileNavigationProp;
+interface EmployeeManagementProps {
+    navigation: EmployeeManagementNavigationProp;
 }
 
-const EmployeeManagement: React.FC<ProfileProps> = ({ navigation }) => {
+const EmployeeManagement: React.FC<EmployeeManagementProps> = ({ navigation }) => {
+    const { authToken } = useAuth(); // Get the auth token from the context
+    const [employees, setEmployees] = useState<any[]>([]); // State for storing employees data
+    const { setLoading } = useLoading(); // For showing the loading indicator
+
+    useFocusEffect(
+        useCallback(() => {
+            // Fetch employees when the screen is focused
+            const fetchEmployees = async () => {
+                setLoading(true);
+                try {
+                    const response = await getEmployees(authToken); // Call getEmployees API
+                    console.log('Employee data:', response);
+                    setEmployees(response?.data || []); // Assuming the response has a 'data' array
+                } catch (err) {
+                    showError(err);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            fetchEmployees();
+        }, [authToken])  // Dependency array to ensure token availability
+    );
+
+    // Function to render the employee list
+    const renderEmployees = () => {
+        if (employees.length === 0) {
+            return <CustomText>No employees exist</CustomText>;
+        }
+
+        return employees.map((employee, index) => (
+            <View key={index} style={styles.employeeItem}>
+                <CustomText>{employee.firstName} {employee.lastName}</CustomText>
+                <CustomText>{employee.employeeRole}</CustomText>
+                <CustomText>{employee.contactNumber}</CustomText>
+            </View>
+        ));
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <Header title="Employee Management" />
             <ScrollView contentContainerStyle={styles.detailsContainer}>
                 <View style={styles.inputContainer}>
-                    <CustomText>
-                        No employees exist
-                    </CustomText>
+                    {renderEmployees()}
                 </View>
             </ScrollView>
+
             <Pressable
                 onPress={() => navigation.navigate('OnboardEmployee')}
                 style={styles.addEmployeeCta}>

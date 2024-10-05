@@ -9,9 +9,13 @@ import CustomButton from '../../components/molecules/CustomButton';
 import { Dropdown } from 'react-native-element-dropdown';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLoading } from '../../contexts/LoadingContext';
-import { onboardEmployee } from '../../services/employee';
+import { onboardEmployee } from '../../services/employee'; // Import getFields API method
 import styles from './OnboardEmployee.styles';
 import { showError } from '../../components/molecules/OtpTextInput/utils';
+import { getFields } from '../../services/fields';
+import CustomText from '../../components/atoms/CustomText/CustomText';
+import { FontAwesome6 } from '@expo/vector-icons';
+import Colors from '../../constants/Colors';
 
 type AddFieldNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'OnboardEmployee'>;
 
@@ -36,7 +40,27 @@ const OnboardEmployee: React.FC<OnboardEmployeeProps> = ({ navigation }) => {
         employeeRole: '',
     });
 
+    const [fields, setFields] = useState<any[]>([]); // State for the fields
+    const [selectedField, setSelectedField] = useState(''); // State for the selected field
+
     const { firstName, lastName, employeeEmail, contactNumber, employeeRole } = state;
+
+    useEffect(() => {
+        // Fetch fields data when the component mounts
+        setLoading(true);
+        getFields(authToken)
+            .then(response => {
+                console.log('getFields res',JSON.stringify(response));
+                
+                setFields(response.data); // Set the fields data
+            })
+            .catch(err => {
+                showError(err);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, [authToken]);
 
     const onBackPress = () => {
         navigation.goBack();
@@ -50,7 +74,11 @@ const OnboardEmployee: React.FC<OnboardEmployeeProps> = ({ navigation }) => {
         setState(prevState => ({ ...prevState, employeeRole: value }));
     };
 
-    const isButtonEnabled = firstName && lastName && employeeEmail && contactNumber && employeeRole;
+    const handleFieldChange = (value: string) => {
+        setSelectedField(value); // Update the selected field state
+    };
+
+    const isButtonEnabled = firstName && lastName && employeeEmail && contactNumber && employeeRole && selectedField;
 
     const submitForm = () => {
         setLoading(true);
@@ -65,31 +93,85 @@ const OnboardEmployee: React.FC<OnboardEmployeeProps> = ({ navigation }) => {
             lastName,
             employeeEmail,
             contactNumber,
-            employeeRole
+            employeeRole,
+            fieldId: selectedField
         };
 
         onboardEmployee(authToken, requestBody)
             .then(data => {
-                navigation.navigate('OnboardEmployeeOtpVerification', {
+                navigation.replace('OnboardEmployeeOtpVerification', {
                     employeeEmail,
                     employeeRole,
                     firstName,
                     lastName,
-                    contactNumber
-                })
+                    contactNumber,
+                    fieldId: selectedField
+                });
             })
             .catch(err => {
-                showError(err)
-            }).finally(() => {
+                showError(err);
+            })
+            .finally(() => {
                 setLoading(false);
             });
     };
+
+    // Custom renderItem with an icon on the right
+    const renderDropdownItem = (item: any) => {
+        console.log('renderDropdownItem is', item);
+        let iconName = 'wheat-awn'
+        switch (item.type) {
+            case 'Farm':
+                iconName = 'wheat-awn'
+                break;
+            case 'Orchard':
+                iconName = 'apple-whole'
+                break;
+            case 'Pasture':
+                iconName = 'cow'
+                break;
+
+            default:
+                break;
+        }
+        return (
+            <View style={styles.dropdownItemContainer}>
+                <CustomText color={Colors.romanSilver} weight='500' size={14}>{item.label}</CustomText>
+                <FontAwesome6 color={Colors.romanSilver2} name={iconName} size={18} />
+            </View>
+        );
+    };
+
+    // Map fields to dropdown format
+    const fieldTypes = fields.map(field => ({
+        label: field.fieldName,
+        value: field.fieldId,
+        type: field.fieldType
+    }));    
 
     return (
         <SafeAreaView style={styles.container}>
             <CustomKeyboardAvoidingView>
                 <Header title="Onboard Employee" isBackButtonVisible onBackPress={onBackPress} />
                 <View style={styles.inputContainer}>
+                    {/* Dropdown for Field Type */} 
+                    <View style={styles.dropdownContainer}>
+                        <Dropdown
+                            maxHeight={200}
+                            containerStyle={{ borderRadius: 8 }}
+                            selectedTextStyle={styles.dropdownTextStyle}
+                            itemTextStyle={styles.dropdownTextStyle}
+                            placeholderStyle={styles.dropdownPlaceholderStyle}
+                            style={styles.dropdown}
+                            data={fieldTypes}
+                            labelField="label"
+                            valueField="value"
+                            placeholder="Assign a field to an employee"
+                            renderItem={renderDropdownItem}  // Custom renderItem
+                            value={selectedField}
+                            onChange={item => handleFieldChange(item.value)} // Update selected field
+                        />
+                    </View>
                     {/* First Name Input */}
                     <CustomTextBox
                         style={styles.textBoxContainer}
@@ -121,6 +203,7 @@ const OnboardEmployee: React.FC<OnboardEmployeeProps> = ({ navigation }) => {
                     <CustomTextBox
                         style={styles.textBoxContainer}
                         keyboardType="phone-pad"
+                        maxLength={13}
                         value={contactNumber}
                         onChangeText={val => handleChange('contactNumber', val)}
                         placeholder="Contact Number"
