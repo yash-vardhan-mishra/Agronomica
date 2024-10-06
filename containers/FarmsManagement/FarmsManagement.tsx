@@ -43,11 +43,13 @@ const FarmsManagement: React.FC<FarmsManagementProp> = ({ navigation }) => {
         }
 
         return fields.map((field, index) => (
-            <View key={index} style={styles.fieldItem}>
+            <Pressable
+                onPress={() => navigation.navigate('FarmDetails', { fieldId: field.fieldId })}
+                key={index} style={styles.fieldItem}>
                 <CustomText>{field.fieldName}</CustomText>
                 <CustomText>{field.size} acres</CustomText>
                 <CustomText>{field.fieldType}</CustomText>
-            </View>
+            </Pressable>
         ));
     };
 

@@ -6,6 +6,7 @@ import AddField from '../containers/FarmsManagement/AddField';
 import OnboardEmployee from '../containers/EmployeeMangement/OnboardEmployee';
 import OnboardEmployeeOtpVerification from '../containers/EmployeeMangement/OnboardEmployeeOtpVerification'; // Import the new screen
 import EmployeeDetails from '../containers/EmployeeMangement/EmployeeDetails';
+import FarmDetails from '../containers/FarmsManagement/FarmDetails';
 
 const AuthStack = createNativeStackNavigator();
 
@@ -15,7 +16,7 @@ export type AuthStackParamList = {
   AddField: undefined;
   OnboardEmployee: undefined;
   OnboardEmployeeOtpVerification: {
-    employeeEmail: string; 
+    employeeEmail: string;
     employeeRole: string;
     firstName: string,
     lastName: string;
@@ -23,7 +24,10 @@ export type AuthStackParamList = {
     fieldId: string;
   };
   EmployeeDetails: {
-    employeeId: string; 
+    employeeId: string;
+  };
+  FarmDetails: {
+    fieldId: string;
   };
 };
 
@@ -41,6 +45,10 @@ export default function AuthStackScreen() {
       <AuthStack.Screen
         name="EmployeeDetails"
         component={EmployeeDetails}
+      />
+      <AuthStack.Screen
+        name="FarmDetails"
+        component={FarmDetails}
       />
     </AuthStack.Navigator>
   );
