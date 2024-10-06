@@ -10,7 +10,7 @@ import CustomTextBox from '../../components/atoms/CustomText/CustomTextBox'
 import CustomKeyboardAvoidingView from '../../components/molecules/CustomKeyboardAvoidingView'
 import Colors from '../../constants/Colors'
 import Strings from '../../constants/Strings'
-import { login } from '../../services/auth'
+import { login, register } from '../../services/auth'
 import { AuthScreenNavigationProp } from '../../navigation/UnauthStack';
 import { useLoading } from '../../contexts/LoadingContext';
 import { showError } from '../../components/molecules/OtpTextInput/utils';
@@ -41,18 +41,28 @@ const Auth = () => {
         });
     }
 
+    const registerUser = () => {
+        register(email, password).then(res => {
+            navigation.navigate('OtpVerification', { email });
+        }).catch(err => {
+            showError(err)
+        }).finally(() => {
+            setLoading(false)
+        });
+    }
+
     const submitForm = () => {
         setLoading(true)
         if (isLogin) {
             loginUser()
         } else {
-            console.log('this happened');
+            registerUser()
         }
     };
 
     const toggleGui = () => {
         setIsLogin(val => !val)
-
+        setState(initialState)
     }
 
     const isButtonEnabled = email && password

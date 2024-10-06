@@ -8,6 +8,7 @@ import { HomeTabParamList } from '../../navigation/HomeTab';
 import { useProfile } from '../../contexts/ProfileProvider';
 import CustomButton from '../../components/molecules/CustomButton';
 import CustomTextBoxWithTitle from '../../components/molecules/CustomTextBoxWithTitle';
+import { useAuth } from '../../contexts/AuthContext';
 
 type ProfileNavigationProp = NativeStackNavigationProp<HomeTabParamList, 'Profile'>; // Define the type for navigation
 
@@ -17,6 +18,7 @@ interface ProfileProps {
 
 const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     const { profile } = useProfile();
+    const { logout } = useAuth()
     // Provide default values if profile is null
     const firstName = profile?.firstName || '';
     const lastName = profile?.lastName || '';
@@ -31,7 +33,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
                     <CustomTextBoxWithTitle title='Contact Number' editable={false} value={contactNumber} />
                 </View>
             </ScrollView>
-            <CustomButton style={{ marginHorizontal: 20, marginBottom: 20 }} label='Log Out' onPress={() => console.log('logout')} />
+            <CustomButton style={{ marginHorizontal: 20, marginBottom: 20 }} label='Log Out' onPress={() => logout()} />
         </SafeAreaView>
     );
 };

@@ -45,7 +45,7 @@ const OnboardEmployeeOtpVerification = () => {
             fieldId
         })
             .then(() => {
-                Alert.alert('Success', 'OTP Verified!');
+                Alert.alert('Onboarding Initiated', "Login details have been shared on employee's email account!");
                 navigation.goBack();
             })
             .catch(err => {

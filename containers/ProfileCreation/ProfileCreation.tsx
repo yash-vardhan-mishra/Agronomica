@@ -13,6 +13,7 @@ import { updateProfile } from '../../services/profile';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../../navigation/AuthStack';
 import { showError } from '../../components/molecules/OtpTextInput/utils';
+import { useProfile } from '../../contexts/ProfileProvider';
 
 type ProfileCreationNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'ProfileCreation'>; // Define the type for navigation
 
@@ -22,6 +23,7 @@ interface ProfileCreationProps {
 
 const ProfileCreation: React.FC<ProfileCreationProps> = ({ navigation }) => {
     const { authToken } = useAuth();
+    const { fetchProfileData } = useProfile()
     const [state, setState] = useState({
         firstName: '',
         lastName: '',
@@ -38,6 +40,7 @@ const ProfileCreation: React.FC<ProfileCreationProps> = ({ navigation }) => {
     const updateFarmerInfo = () => {
         setLoading(true);
         updateProfile(authToken, firstName, lastName, contactNumber).then(res => {
+            fetchProfileData()
             navigation.navigate('HomeTab');
         }).catch(err => {
             showError(err)
@@ -65,7 +68,7 @@ const ProfileCreation: React.FC<ProfileCreationProps> = ({ navigation }) => {
                 <View style={styles.inputContainer}>
                     <CustomTextBox style={styles.textBoxContainer} value={firstName} onChangeText={(val) => handleChange('firstName', val)} placeholder='First Name' />
                     <CustomTextBox style={styles.textBoxContainer} value={lastName} onChangeText={(val) => handleChange('lastName', val)} placeholder='Last Name' />
-                    <CustomTextBox keyboardType='phone-pad' value={contactNumber} onChangeText={(val) => handleChange('contactNumber', val)} placeholder='Contact Number' />
+                    <CustomTextBox maxLength={10} keyboardType='phone-pad' value={contactNumber} onChangeText={(val) => handleChange('contactNumber', val)} placeholder='Contact Number' />
                     <CustomButton disabled={!isButtonEnabled} label='Submit' onPress={submitForm} />
                 </View>
             </CustomKeyboardAvoidingView>
