@@ -1,10 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScrollView, View, Pressable, ActivityIndicator } from 'react-native';
+import { ScrollView, View, Pressable } from 'react-native';
 import styles from './EmployeeManagement.styles';
 import Header from '../../components/molecules/Header';
 import CustomText from '../../components/atoms/CustomText/CustomText';
-import Colors from '../../constants/Colors';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeTabParamList } from '../../navigation/HomeTab';
 import { getEmployees } from '../../services/employee';
@@ -12,6 +11,7 @@ import { useAuth } from '../../contexts/AuthContext';  // Assuming you have an A
 import { useLoading } from '../../contexts/LoadingContext';  // Loading context to handle the loader
 import { useFocusEffect } from '@react-navigation/native';
 import { showError } from '../../components/molecules/OtpTextInput/utils'; // Utility to handle errors
+import { useFields } from '../../contexts/FieldsDetailsContext';
 
 type EmployeeManagementNavigationProp = NativeStackNavigationProp<HomeTabParamList, 'EmployeeManagement'>;
 
@@ -23,6 +23,11 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = ({ navigation }) =
     const { authToken } = useAuth(); // Get the auth token from the context
     const [employees, setEmployees] = useState<any[]>([]); // State for storing employees data
     const { setLoading } = useLoading(); // For showing the loading indicator
+    const { fetchFieldsData } = useFields();
+
+    useEffect(() => {
+        fetchFieldsData()
+    }, [])
 
     useFocusEffect(
         useCallback(() => {
@@ -65,20 +70,12 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = ({ navigation }) =
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header title="Employee Management" />
+            <Header title="Employee Management" rightIcon='person-add-outline' onRightIconPress={() => navigation.navigate('OnboardEmployee')} />
             <ScrollView contentContainerStyle={styles.detailsContainer}>
                 <View style={styles.inputContainer}>
                     {renderEmployees()}
                 </View>
             </ScrollView>
-
-            <Pressable
-                onPress={() => navigation.navigate('OnboardEmployee')}
-                style={styles.addEmployeeCta}>
-                <CustomText size={24} color={Colors.white}>
-                    +
-                </CustomText>
-            </Pressable>
         </SafeAreaView>
     );
 };

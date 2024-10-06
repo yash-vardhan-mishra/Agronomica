@@ -23,15 +23,15 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     const contactNumber = profile?.contactNumber || '';
     return (
         <SafeAreaView style={styles.container}>
-            <Header title="Profile" rightIcon='create-outline'/>
+            <Header title="Profile" />
             <ScrollView contentContainerStyle={styles.detailsContainer}>
                 <View style={styles.inputContainer}>
                     <CustomTextBoxWithTitle title='First Name' editable={false} value={firstName} />
                     <CustomTextBoxWithTitle title='Last Name' editable={false} value={lastName} />
                     <CustomTextBoxWithTitle title='Contact Number' editable={false} value={contactNumber} />
                 </View>
-                <CustomButton label='Log Out' onPress={() => console.log('logout')} />
             </ScrollView>
+            <CustomButton style={{ marginHorizontal: 20, marginBottom: 20 }} label='Log Out' onPress={() => console.log('logout')} />
         </SafeAreaView>
     );
 };

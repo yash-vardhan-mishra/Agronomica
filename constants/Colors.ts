@@ -9,5 +9,6 @@ export default {
     romanSilver2: '#838BA1',
     darkGunmetal: '#1E232C',
     black: '#000000',
-    silver: "#C7C7CD"
+    silver: "#C7C7CD",
+    lightGrey: "#D9D9D9"
 }

@@ -71,7 +71,12 @@ const AddField: React.FC<AddFieldProps> = ({ navigation }) => {
 
     const { fieldName, fieldLocation, fieldSize, fieldTypes, selectedFieldType, latitude, longitude } = state;
 
-    const isButtonEnabled = fieldName && fieldLocation && fieldSize && selectedFieldType;
+    const isButtonEnabled =
+        fieldName &&
+        fieldLocation &&
+        fieldSize &&
+        selectedFieldType &&
+        parseFloat(fieldSize) <= 999;
 
     const submitForm = async () => {
         if (!fieldName || !fieldLocation || !fieldSize || !selectedFieldType || !latitude || !longitude) {
@@ -167,8 +172,8 @@ const AddField: React.FC<AddFieldProps> = ({ navigation }) => {
             <CustomKeyboardAvoidingView>
                 <Header title="Add Field" isBackButtonVisible onBackPress={onBackPress} />
                 <View style={styles.inputContainer}>
-                    <CustomTextBox style={styles.textBoxContainer} value={fieldName} onChangeText={(val) => handleChange('fieldName', val)} placeholder='Field Name' />
-                    <CustomTextBox style={styles.textBoxContainer} keyboardType='number-pad' value={fieldSize} onBlur={formatFieldSize} onChangeText={(val) => handleChange('fieldSize', val)} placeholder='Field Size in Acres' />
+                    <CustomTextBox style={styles.textBoxContainer} value={fieldName} onChangeText={(val) => handleChange('fieldName', val)} placeholder='Field Name' maxLength={20} />
+                    <CustomTextBox maxLength={6} style={styles.textBoxContainer} keyboardType='number-pad' value={fieldSize} onBlur={formatFieldSize} onChangeText={(val) => handleChange('fieldSize', val)} placeholder='Field Size in Acres' />
                     <CustomTextBox numberOfLines={2} style={styles.textBoxContainer} value={fieldLocation} onFocus={() => handleMapView(true)} placeholder='Field Location' />
 
                     {/* Dropdown for Field Type */}

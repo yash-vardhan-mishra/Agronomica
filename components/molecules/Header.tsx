@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons'
 import React from 'react'
 import { Pressable, StyleSheet, TextStyle, View } from 'react-native'
 import CustomText from '../atoms/CustomText/CustomText'
+import Colors from '../../constants/Colors';
 
 interface HeaderProps {
     title: string;
@@ -22,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({ title, onBackPress, isBackButtonVisible
 
     return (
         <View style={styles.container}>
-            {isBackButtonVisible && !rightIcon ? (
+            {isBackButtonVisible ? (
                 <Pressable style={styles.backButton} onPress={onBackPress}>
                     <Ionicons name="arrow-back" size={20} color="black" />
                 </Pressable>
@@ -30,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({ title, onBackPress, isBackButtonVisible
                 <View style={styles.spacer} />
             )}
 
-            <CustomText style={titleStyles()} size={18} weight='500'>
+            <CustomText style={titleStyles()} size={18} weight='600'>
                 {title}
             </CustomText>
 
@@ -53,7 +54,9 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         width: '100%',
         flexDirection: 'row',
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
+        borderBottomWidth: 0.25,
+        borderColor: Colors.romanSilver2
     },
     backButton: {
         marginRight: 16

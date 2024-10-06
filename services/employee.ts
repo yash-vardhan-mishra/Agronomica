@@ -104,6 +104,29 @@ export async function getEmployeeById(token: string, employeeId: string) {
     });
 }
 
+export async function getFarmerEmployeeTimesheets(token: string, employeeId: string) {
+    return api.get(
+        `${process.env.EXPO_PUBLIC_API_URL}farmer/timesheets/${employeeId}`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        }
+    )
+    .then(resp => {
+        const responseBody = resp.data;
+        const { success } = responseBody;
+        if (success) {
+            return responseBody;
+        }
+        const err = new Error('Invalid response');
+        throw err;
+    })
+    .catch(err => {
+        throw err;
+    });
+}
+
 export async function updateEmployee(token: string, requestBody: {
     employeeId: string,
     employeeRole: string,

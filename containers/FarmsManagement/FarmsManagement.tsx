@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './FarmsManagement.styles';
 import Header from '../../components/molecules/Header';
@@ -6,7 +6,6 @@ import { Pressable, ScrollView, View } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeTabParamList } from '../../navigation/HomeTab';
 import CustomText from '../../components/atoms/CustomText/CustomText';
-import Colors from '../../constants/Colors';
 import { useFocusEffect } from '@react-navigation/native';
 import { useFields } from '../../contexts/FieldsDetailsContext';
 
@@ -55,20 +54,12 @@ const FarmsManagement: React.FC<FarmsManagementProp> = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header title="Farms Management" />
+            <Header title="Farms Management" rightIcon='add-circle-outline' onRightIconPress={() => navigation.navigate('AddField')} />
             <ScrollView contentContainerStyle={styles.detailsContainer}>
                 <View style={styles.inputContainer}>
                     {renderFields()}
                 </View>
             </ScrollView>
-
-            <Pressable
-                onPress={() => navigation.navigate('AddField')}
-                style={styles.addFieldCta}>
-                <CustomText size={24} color={Colors.white}>
-                    +
-                </CustomText>
-            </Pressable>
         </SafeAreaView>
     );
 };

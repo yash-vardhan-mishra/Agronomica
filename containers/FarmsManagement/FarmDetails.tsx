@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, ScrollView } from 'react-native';
 import Header from '../../components/molecules/Header';
-import CustomText from '../../components/atoms/CustomText/CustomText';
 import CustomTextBoxWithTitle from '../../components/molecules/CustomTextBoxWithTitle';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useFields } from '../../contexts/FieldsDetailsContext';
 import { AuthStackParamList } from '../../navigation/AuthStack';
 import styles from './FarmDetails.styles';
@@ -17,6 +16,7 @@ const FarmDetails: React.FC = () => {
     const route = useRoute<FarmDetailsRouteProp>();
     const { fieldId } = route.params; // Field ID passed from FarmsManagement
     const { fields } = useFields();
+    const navigation = useNavigation()
     const [field, setField] = useState<any>(null);
 
     useEffect(() => {
@@ -28,7 +28,7 @@ const FarmDetails: React.FC = () => {
         return null; // Return null if no field is found or data is loading
     }
 
-    const { fieldName, size, fieldType, fieldLat, fieldLong } = field;    
+    const { fieldName, size, fieldType, fieldLat, fieldLong } = field;
 
     const region = {
         latitude: fieldLat || constants.Strings.waikatoLat,  // Provide default coordinates if fieldLat is null
@@ -39,7 +39,7 @@ const FarmDetails: React.FC = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header isBackButtonVisible onBackPress={() => { }} title="Farm Details" />
+            <Header isBackButtonVisible onBackPress={() => navigation.goBack()} title="Farm Details" />
             <ScrollView contentContainerStyle={styles.detailsContainer}>
                 <CustomTextBoxWithTitle title="Farm Name" value={fieldName} editable={false} />
                 <CustomTextBoxWithTitle title="Size (Acres)" value={size?.toString()} editable={false} />

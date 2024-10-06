@@ -124,7 +124,7 @@ const EmployeeDetails = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header isBackButtonVisible onBackPress={() => navigation.goBack()} title="Employee Details" />
+            <Header isBackButtonVisible onBackPress={() => navigation.goBack()} title="Employee Details" rightIcon="calendar-outline" onRightIconPress={() => navigation.navigate('Timesheets', { employeeId })} />
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.detailsContainer}>
                 <View style={styles.inputContainer}>
                     <View style={styles.dropdownContainer}>
