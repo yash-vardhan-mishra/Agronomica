@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, Pressable, View } from 'react-native'
+import { Pressable, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context'
 

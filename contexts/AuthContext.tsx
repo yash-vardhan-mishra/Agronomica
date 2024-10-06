@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { useLoading } from './LoadingContext';
-import { removeToken } from '../services/keychain';
+import { getItem, removeToken } from '../services/keychain';
 
 interface AuthContextType {
     isLoggedIn: boolean;
@@ -20,7 +20,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Function to check the token in secure storage
     const checkAuthToken = async () => {
         setLoading(true);
-        const token = await SecureStore.getItemAsync('authToken');
+        const token = await getItem('authToken');
+        console.log('authToken is',authToken);
+        
         setAuthToken(token);
         setIsLoggedIn(!!token);
         setLoading(false);

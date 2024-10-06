@@ -6,7 +6,7 @@ export default {
     signUpBottomPrompt: 'Don’t have an account?',
     signUpBottomPromptAction: 'Register Now',
     otpVerifyPrompt: 'Please verify your otp to continue',
-    otpInputPrompt: 'Enter the verification code we just sent on your phone number.',
+    otpInputPrompt: 'Enter the verification code we just sent on your email id.',
     waikatoLat: '-37.788289',
     waikatoLong: '175.312474'
 }

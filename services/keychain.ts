@@ -5,7 +5,7 @@ export async function saveItem(key: string, value: string) {
 }
 
 export async function getItem(key: string) {
-    await SecureStore.getItemAsync(key);
+    return await SecureStore.getItemAsync(key);
 }
 
 export async function removeToken() {
