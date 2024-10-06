@@ -11,6 +11,7 @@ import { AuthStackParamList } from '../../navigation/AuthStack';
 import { formatDistanceToNow, isToday, isYesterday, format } from 'date-fns';
 import { getFarmerEmployeeTimesheets } from '../../services/employee';
 import { RouteProp, useRoute } from '@react-navigation/native';
+import Colors from '../../constants/Colors';
 
 
 // Define the navigation type for Home screen
@@ -82,10 +83,19 @@ const Timesheets: React.FC<TimesheetsProps> = ({ navigation }) => {
 
             return (
                 <Pressable key={index} style={styles.timesheetItem}>
-                    <CustomText>Date Worked: {dateWorked}</CustomText>
-                    <CustomText>Punch In: {clockInTime} ({clockInDistance})</CustomText>
-                    <CustomText>Punch Out: {clockOutTime}</CustomText>
-                    <CustomText>Minutes Worked: {timesheet.minutesWorked}</CustomText>
+                    <CustomText size={14} weight='600'>Date Worked: <CustomText size={14} color={Colors.romanSilver2}>{dateWorked}</CustomText></CustomText>
+                    <CustomText size={14} weight='600'>Punch In:
+                        <CustomText size={14} color={Colors.romanSilver}> {clockInTime} ({clockInDistance})</CustomText>
+                    </CustomText>
+                    <CustomText size={14} weight='600'>Punch Out:
+                        <CustomText color={Colors.romanSilver} size={14}>
+                            {' '}{clockOutTime}
+                        </CustomText>
+                    </CustomText>
+                    <CustomText weight='600' size={14}>Minutes Worked:
+                        <CustomText weight='600' size={14}>
+                            {' '}{timesheet.minutesWorked}</CustomText>
+                    </CustomText>
                 </Pressable>
             );
         });

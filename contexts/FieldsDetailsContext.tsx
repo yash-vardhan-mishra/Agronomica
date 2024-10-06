@@ -9,6 +9,7 @@ interface Field {
     size: number;
     fieldType: string;
     fieldId: string;
+    fieldAddress: string;
 }
 
 interface FieldsContextProps {

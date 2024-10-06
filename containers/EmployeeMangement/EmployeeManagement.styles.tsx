@@ -17,16 +17,16 @@ const styles = StyleSheet.create({
         width: 52
     },
     employeeItem: {
-        backgroundColor: Colors.antiFlashWhite,
         padding: 16,
+        backgroundColor: Colors.white,
         borderRadius: 10,
         marginBottom: 16,
         shadowColor: Colors.black,
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: 1,
         },
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.15,
         shadowRadius: 4,
         elevation: 3,
     },

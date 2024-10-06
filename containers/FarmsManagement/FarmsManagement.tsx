@@ -8,6 +8,7 @@ import { HomeTabParamList } from '../../navigation/HomeTab';
 import CustomText from '../../components/atoms/CustomText/CustomText';
 import { useFocusEffect } from '@react-navigation/native';
 import { useFields } from '../../contexts/FieldsDetailsContext';
+import Colors from '../../constants/Colors';
 
 type FarmsManagementNavigationProp = NativeStackNavigationProp<HomeTabParamList, 'FarmsManagement'>;
 
@@ -18,6 +19,7 @@ interface FarmsManagementProp {
 const FarmsManagement: React.FC<FarmsManagementProp> = ({ navigation }) => {
     const { fields, fetchFieldsData } = useFields();
     const [isFocused, setIsFocused] = useState(false);
+    console.log('fields are', fields);
 
     useFocusEffect(
         useCallback(() => {
@@ -41,15 +43,20 @@ const FarmsManagement: React.FC<FarmsManagementProp> = ({ navigation }) => {
             return <CustomText>No Farms exist</CustomText>;
         }
 
-        return fields.map((field, index) => (
-            <Pressable
-                onPress={() => navigation.navigate('FarmDetails', { fieldId: field.fieldId })}
-                key={index} style={styles.fieldItem}>
-                <CustomText>{field.fieldName}</CustomText>
-                <CustomText>{field.size} acres</CustomText>
-                <CustomText>{field.fieldType}</CustomText>
-            </Pressable>
-        ));
+        return fields.map((field, index) => {
+
+            return (
+                <Pressable
+                    onPress={() => navigation.navigate('FarmDetails', { fieldId: field.fieldId })}
+                    key={index} style={styles.fieldItem}>
+                    <CustomText weight='600'>{field.fieldName}</CustomText>
+                    <View style={{ flexDirection: 'row' }}>
+                        <CustomText size={12} color={Colors.romanSilver}>{field.size} acres • {field.fieldType}</CustomText>
+                    </View>
+                    <CustomText size={12} color={Colors.romanSilver}>{field.fieldAddress}</CustomText>
+                </Pressable>
+            )
+        });
     };
 
     return (

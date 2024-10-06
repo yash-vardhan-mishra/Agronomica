@@ -12,6 +12,7 @@ import { useLoading } from '../../contexts/LoadingContext';  // Loading context 
 import { useFocusEffect } from '@react-navigation/native';
 import { showError } from '../../components/molecules/OtpTextInput/utils'; // Utility to handle errors
 import { useFields } from '../../contexts/FieldsDetailsContext';
+import Colors from '../../constants/Colors';
 
 type EmployeeManagementNavigationProp = NativeStackNavigationProp<HomeTabParamList, 'EmployeeManagement'>;
 
@@ -61,9 +62,9 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = ({ navigation }) =
                     navigation.navigate('EmployeeDetails', { employeeId: employee.employeeId })
                 }
                 key={index} style={styles.employeeItem}>
-                <CustomText>{employee.firstName} {employee.lastName}</CustomText>
-                <CustomText>{employee.employeeRole}</CustomText>
-                <CustomText>{employee.contactNumber}</CustomText>
+                <CustomText weight='600'>{employee.firstName} {employee.lastName}</CustomText>
+                <CustomText size={14} color={Colors.romanSilver} style={{ textTransform: 'capitalize' }}>{employee.employeeRole}</CustomText>
+                <CustomText size={14} color={Colors.romanSilver} >{employee.contactNumber}</CustomText>
             </Pressable>
         ));
     };

@@ -6,16 +6,16 @@ const styles = StyleSheet.create({
     inputContainer: { marginTop: 20 },
     detailsContainer: { flex: 1, justifyContent: 'space-between', paddingBottom: 20, paddingHorizontal: 20 },
     timesheetItem: {
-        backgroundColor: Colors.antiFlashWhite,
         padding: 16,
+        backgroundColor: Colors.white,
         borderRadius: 10,
         marginBottom: 16,
         shadowColor: Colors.black,
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: 1,
         },
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.15,
         shadowRadius: 4,
         elevation: 3,
     }
