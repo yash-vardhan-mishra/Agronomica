@@ -56,6 +56,17 @@ const Timesheets: React.FC<TimesheetsProps> = ({ navigation }) => {
         fetchTimesheets();
     }, [authToken]);
 
+
+    // Function to format minutes into hours and minutes
+    const formatMinutesWorked = (minutes: number) => {
+        if (minutes >= 60) {
+            const hours = Math.floor(minutes / 60);
+            const remainingMinutes = minutes % 60;
+            return `${hours} hour${hours > 1 ? 's' : ''} ${remainingMinutes} minute${remainingMinutes !== 1 ? 's' : ''}`;
+        }
+        return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+    };
+
     const renderTimesheets = () => {
         if (timesheets.length === 0) {
             return <CustomText>No Timesheets available</CustomText>;
@@ -92,10 +103,13 @@ const Timesheets: React.FC<TimesheetsProps> = ({ navigation }) => {
                             {' '}{clockOutTime}
                         </CustomText>
                     </CustomText>
-                    <CustomText weight='600' size={14}>Minutes Worked:
-                        <CustomText weight='600' size={14}>
-                            {' '}{timesheet.minutesWorked}</CustomText>
-                    </CustomText>
+                    {timesheet.minutesWorked ? (
+                        <CustomText size={14} weight='600'>Work duration:
+                            <CustomText size={14} color={Colors.romanSilver}>
+                                {' '}{formatMinutesWorked(timesheet.minutesWorked)}
+                            </CustomText>
+                        </CustomText>
+                    ) : null}
                 </Pressable>
             );
         });

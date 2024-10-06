@@ -28,7 +28,7 @@ export default function HomeTab() {
     return (
         <Tab.Navigator screenOptions={({ route }) => ({
             headerShown: false,
-            tabBarStyle: { height: 80, paddingBottom:12 },
+            tabBarStyle: { height: 92, paddingBottom: 12 },
             tabBarIcon: ({ color, size, focused }) => {
                 let iconName
 
@@ -50,6 +50,7 @@ export default function HomeTab() {
             tabBarActiveTintColor: Colors.black, // Active tab color
             tabBarInactiveTintColor: 'rgba(1,1,1,0.5)',  // Inactive tab color
             tabBarLabelStyle: {
+                paddingBottom: 12,
                 marginTop: -8,  // Reduce this value to decrease space between icon and label
             },
         })}>

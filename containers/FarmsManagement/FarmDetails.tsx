@@ -33,8 +33,8 @@ const FarmDetails: React.FC = () => {
     const region = {
         latitude: fieldLat || constants.Strings.waikatoLat,  // Provide default coordinates if fieldLat is null
         longitude: fieldLong || constants.Strings.waikatoLong,  // Provide default coordinates if fieldLong is null
-        latitudeDelta: 0.01, // Zoom level for the map
-        longitudeDelta: 0.01,
+        latitudeDelta: 0.1, // Zoom level for the map
+        longitudeDelta: 0.1,
     };
 
     return (
