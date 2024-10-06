@@ -5,7 +5,7 @@ import Dimensions from "../../constants/Dimensions";
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: Colors.white },
     inputContainer: { marginTop: 20 },
-    detailsContainer: { justifyContent: 'space-between', paddingBottom: 20, paddingHorizontal: 20 },
+    detailsContainer: { justifyContent: 'space-between', padding: 20 },
     dropdownContainer: {
         marginBottom: 16,
         width: '100%',
