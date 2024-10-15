@@ -62,7 +62,7 @@ const FarmsManagement: React.FC<FarmsManagementProp> = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <Header title="Farms Management" rightIcon='add-circle-outline' onRightIconPress={() => navigation.navigate('AddField')} />
-            <ScrollView contentContainerStyle={styles.detailsContainer}>
+            <ScrollView showsVerticalScrollIndicator={false} contentInset={{ bottom: 100 }} contentContainerStyle={styles.detailsContainer}>
                 <View style={styles.inputContainer}>
                     {renderFields()}
                 </View>

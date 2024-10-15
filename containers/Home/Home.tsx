@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     videoContainer: {
-        marginBottom: 16,
+        marginBottom: 20,
         borderRadius: 20,
         overflow: 'hidden',
     },

@@ -10,5 +10,6 @@ export default {
     darkGunmetal: '#1E232C',
     black: '#000000',
     silver: "#C7C7CD",
-    lightGrey: "#D9D9D9"
+    lightGrey: "#D9D9D9",
+    shimmerColor: ['#f7f7f7', '#f0f0f0', '#f7f7f7']
 }

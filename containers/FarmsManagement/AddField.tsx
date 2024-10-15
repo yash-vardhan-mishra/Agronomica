@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { SafeAreaView, View, Alert } from 'react-native';
+import { SafeAreaView, View, Alert, Pressable } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -11,12 +11,12 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useLoading } from '../../contexts/LoadingContext';
 import { AuthStackParamList } from '../../navigation/AuthStack';
 import CustomButton from '../../components/molecules/CustomButton';
-import MapViewComponent, { FullScreenModalRef, MapViewData } from '../../components/molecules/MapViewComponent';
 import { addField, getFieldTypes } from '../../services/fields';
 import Colors from '../../constants/Colors';
 import CustomText from '../../components/atoms/CustomText/CustomText';
 import constants from '../../constants';
 import { showError } from '../../components/molecules/OtpTextInput/utils';
+import MapViewComponent, { FullScreenModalRef, MapViewData } from '../../components/organisms/MapViewComponent/MapViewComponent';
 
 type AddFieldNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'AddField'>;
 
@@ -116,6 +116,8 @@ const AddField: React.FC<AddFieldProps> = ({ navigation }) => {
     };
 
     const handleMapView = (isOpen: boolean) => {
+        console.log('handleMapView, ',isOpen);
+        
         if (mapView.current) {
             if (isOpen) {
                 mapView.current.open();
@@ -167,6 +169,10 @@ const AddField: React.FC<AddFieldProps> = ({ navigation }) => {
         );
     };
 
+    const openMap = () => {
+        handleMapView(true)
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <CustomKeyboardAvoidingView>
@@ -174,7 +180,9 @@ const AddField: React.FC<AddFieldProps> = ({ navigation }) => {
                 <View style={styles.inputContainer}>
                     <CustomTextBox style={styles.textBoxContainer} value={fieldName} onChangeText={(val) => handleChange('fieldName', val)} placeholder='Field Name' maxLength={20} />
                     <CustomTextBox maxLength={6} style={styles.textBoxContainer} keyboardType='number-pad' value={fieldSize} onBlur={formatFieldSize} onChangeText={(val) => handleChange('fieldSize', val)} placeholder='Field Size in Acres' />
-                    <CustomTextBox numberOfLines={2} style={styles.textBoxContainer} value={fieldLocation} onFocus={() => handleMapView(true)} placeholder='Field Location' />
+                    <Pressable pointerEvents='box-only' onPress={openMap}>
+                        <CustomTextBox numberOfLines={2} style={styles.textBoxContainer} value={fieldLocation} editable={false} placeholder='Field Location' />
+                    </Pressable>
 
                     {/* Dropdown for Field Type */}
                     <View style={styles.dropdownContainer}>
